@@ -1,2 +1,4 @@
 # DixzzXD
-hasil rename dari tiktok
+Cara pake di Termux/Heroku
+
+$ git clone 
