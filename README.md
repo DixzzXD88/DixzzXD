@@ -1,5 +1,5 @@
 # DixzzXD
-Cara pake di Termux/Heroku (Download Termux versi terbaru di F-Droid
+Cara pake di Termux/Heroku (Download Termux versi terbaru di F-Droid)
 
 
 $ pkg update -y && pkg upgrade -y
