@@ -78,6 +78,7 @@ async function startBot() {
         logger: P({ level: "silent" }),
         browser: ["Ditzmd", "Chrome", "1.0.0"],
         printQRInTerminal: false,
+        // PAIRING CODE OPTION
         pairingOptions: {
             usePairingCode: true,
             phoneNumber: phoneNumber
@@ -87,22 +88,23 @@ async function startBot() {
     sock.ev.on("creds.update", saveCreds);
 
     sock.ev.on("connection.update", (update) => {
+        console.log('🔄 Connection update:', JSON.stringify(update, null, 2));
+        
         const { connection, qr, pairingCode } = update;
-        console.log('🔄 Connection update:', connection);
         
         if (pairingCode) {
-            console.log('══════════════════════════════════════');
+            console.log('\n══════════════════════════════════════');
             console.log(`🚀 PAIRING CODE: ${pairingCode}`);
             console.log('══════════════════════════════════════');
             console.log('Cara pake:');
             console.log('1. Buka WhatsApp di HP');
             console.log('2. Tap 3 titik > Linked Devices > Link Device');
             console.log('3. Masukin code di atas');
-            console.log('══════════════════════════════════════');
+            console.log('══════════════════════════════════════\n');
         }
         
         if (connection === "open") {
-            console.log("✅ Bot connected!");
+            console.log("✅ Bot connected successfully!");
         }
         
         if (connection === "close") {
