@@ -1,4 +1,4 @@
-import makeWASocket, { useMultiFileAuthState } from "@whiskeysockets/baileys"
+import { makeWASocket, useMultiFileAuthState } from "@whiskeysockets/baileys"
 import qrcode from "qrcode-terminal"
 import readline from "readline"
 
