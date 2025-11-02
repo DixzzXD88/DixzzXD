@@ -3,7 +3,7 @@ Cara pake di Termux/Heroku
 
 $ git clone https://github.com/DixzzXD88/DixzzXDbot.git
 
-$ cd DixzzXD
+$ cd DixzzXDbot
 
 $ yarn install
 
