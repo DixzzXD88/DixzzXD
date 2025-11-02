@@ -1,16 +1,8 @@
-const fs = require('fs');
-const pino = require('pino');
-const path = require('path');
-const chalk = require('chalk');
-const readline = require('readline');
-const { exec } = require('child_process');
-const { Boom } = require('@hapi/boom');
-const { default: WAConnection, useMultiFileAuthState, Browsers, DisconnectReason, makeInMemoryStore, makeCacheableSignalKeyStore, fetchLatestWaWebVersion, PHONENUMBER_MCC } = require('@whiskeysockets/baileys');
-
-const pairingCode = true;
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
-const store = makeInMemoryStore({ logger: pino().child({ level: 'silent', stream: 'store' }) })
-const question = (text) => new Promise((resolve) => rl.question(text, resolve))
+const { makeWASocket, useMultiFileAuthState, fetchLatestBaileysVersion } = require("@whiskeysockets/baileys");
+const P = require("pino");
+const qrcode = require("qrcode-terminal");
+const fs = require("fs");
+const path = require("path");
 
 let plugins = {}
 
@@ -58,87 +50,33 @@ function getQuotedRaw(msg) {
 }
 
 async function startBot() {
-    const { state, saveCreds } = await useMultiFileAuthState('./session');
-    const { version, isLatest } = await fetchLatestWaWebVersion();
-    
-    const getMessage = async (key) => {
-        if (store) {
-            const msg = await store.loadMessage(key.remoteJid, key.id);
-            return msg?.message || ''
-        }
-        return {
-            conversation: 'Halo Saya Bot'
-        }
-    }
-    
-    const sock = WAConnection({
-        isLatest,
-        logger: pino({ level: 'silent' }),
-        printQRInTerminal: false,
-        browser: Browsers.ubuntu('Chrome'),
-        auth: {
-            creds: state.creds,
-            keys: makeCacheableSignalKeyStore(state.keys, pino({ level: 'silent' })),
-        },
-        getMessage,
-        syncFullHistory: true,
-        generateHighQualityLinkPreview: true,
-    })
+    const { state, saveCreds } = await useMultiFileAuthState("./session");
+    const { version } = await fetchLatestBaileysVersion();
 
-    // PAIRING CODE SYSTEM
-    if (pairingCode && !sock.authState.creds.registered) {
-        let phoneNumber;
-        async function getPhoneNumber() {
-            phoneNumber = await question('📱 Masukin nomor bot (62812xxxxxxx): ');
-            phoneNumber = phoneNumber.replace(/[^0-9]/g, '')
-            
-            if (!Object.keys(PHONENUMBER_MCC).some(v => phoneNumber.startsWith(v)) && !phoneNumber.length < 6) {
-                console.log(chalk.bgBlack(chalk.redBright('Start with your Country WhatsApp code') + chalk.whiteBright(',') + chalk.greenBright(' Example : 62xxx')));
-                await getPhoneNumber()
-            }
-        }
-        
-        setTimeout(async () => {
-            await getPhoneNumber()
-            let code = await sock.requestPairingCode(phoneNumber);
-            console.log('\n══════════════════════════════════════');
-            console.log(`🚀 PAIRING CODE: ${code}`);
-            console.log('══════════════════════════════════════');
-            console.log('1. Buka WhatsApp > Linked Devices > Link Device');
-            console.log('2. Masukin code di atas');
-            console.log('══════════════════════════════════════\n');
-        }, 3000)
-    }
+    const sock = makeWASocket({
+        version,
+        auth: state,
+        logger: P({ level: "silent" }),
+        browser: ["Ditzmd", "Chrome", "1.0"]
+    });
 
-    store.bind(sock.ev)
-    
-    sock.ev.on('creds.update', saveCreds)
-    
-    sock.ev.on('connection.update', async (update) => {
-        const { connection, lastDisconnect } = update
-        if (connection === 'close') {
-            const reason = new Boom(lastDisconnect?.error)?.output.statusCode
-            if (reason === DisconnectReason.connectionLost || 
-                reason === DisconnectReason.connectionClosed ||
-                reason === DisconnectReason.restartRequired ||
-                reason === DisconnectReason.timedOut) {
-                console.log('❌ Connection lost, restarting...');
-                startBot()
-            } else if (reason === DisconnectReason.loggedOut) {
-                console.log('❌ Logged out, delete session...');
-                exec('rm -rf ./session/*')
-                process.exit(1)
-            } else {
-                console.log(`❌ Unknown error: ${reason}`);
-                startBot()
-            }
+    sock.ev.on("creds.update", saveCreds);
+
+    sock.ev.on("connection.update", (update) => {
+        const { connection, qr } = update;
+        if (qr) {
+            console.log("🔑 Scan QR ini di WhatsApp Web:");
+            qrcode.generate(qr, { small: true });
         }
-        if (connection == 'open') {
-            console.log('✅ Bot connected successfully!');
+        if (connection === "open") {
+            console.log("✅ DixzzXD berhasil konek ke WhatsApp!");
+        }
+        if (connection === "close") {
+            console.log("❌ Koneksi terputus, mencoba reconnect...");
+            startBot();
         }
     });
 
-    // MESSAGE HANDLER
     sock.ev.on("messages.upsert", async ({ messages }) => {
         const msg = messages[0];
         if (!msg.message || !msg.key.remoteJid) return;
@@ -170,13 +108,12 @@ async function startBot() {
                 });
             } catch (e) {
                 console.error(`❌ Error di plugin ${command}:`, e);
-                await sock.sendMessage(from, { text: "⚠️ Error di plugin" });
+                await sock.sendMessage(from, { text: "⚠️ Terjadi error di plugin" });
             }
         }
     });
 }
 
-// JALANKAN
 loadPlugins();
 watchPlugins();
-startBot().catch(console.error);
+startBot();
