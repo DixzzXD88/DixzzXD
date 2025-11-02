@@ -1,31 +1,21 @@
-💫 DixzzXD Bot
+# 💫 DixzzXD Bot
 
-> Bot WhatsApp berbasis Baileys yang ringan, simple, dan bisa dikembangkan dengan sistem plugin otomatis reload.
-Sekarang juga bisa dihubungkan ke Telegram: @yajujmanuk
-
-
-
+> Bot WhatsApp berbasis **Baileys** yang ringan, simple, dan bisa dikembangkan dengan sistem **plugin otomatis reload**.  
+> Sekarang juga bisa dihubungkan ke **Telegram**: [@yajujmanuk](https://t.me/yajujmanuk)
 
 ---
 
-⚙️ Fitur Utama
-
-🔁 Auto reload plugin (gak perlu restart bot tiap ubah file)
-
-💬 Prefix command: . (contoh: .menu, .p)
-
-🧩 Sistem plugin modular (tinggal tambah file baru di folder plugin)
-
-🧠 Struktur sederhana, cocok buat recode atau belajar
-
-⚡ Fast & stable (pakai Baileys v6)
-
-
+## ⚙️ Fitur Utama
+- 🔁 Auto reload plugin (gak perlu restart bot tiap ubah file)
+- 💬 Prefix command: `.` (contoh: `.menu`, `.p`)
+- 🧩 Sistem plugin modular (tinggal tambah file baru di folder `plugin`)
+- 🧠 Struktur sederhana, cocok buat recode atau belajar
+- ⚡ Fast & stable (pakai Baileys v6)
 
 ---
 
-🚀 Cara Install
-
+## 🚀 Cara Install
+```bash
 # Clone repository
 git clone https://github.com/DixzzXD88/DixzzXD.git
 cd DixzzXD
@@ -104,12 +94,3 @@ DixzzXD/
 Telegram: @yajujmanuk
 
 GitHub: DixzzXD88
-
-
-
----
-
-📜 License
-
-MIT License — bebas digunakan, dimodifikasi, dan dikembangkan dengan mencantumkan kredit ke author asli.
-
