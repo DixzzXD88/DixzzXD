@@ -1,6 +1,5 @@
 const { makeWASocket, useMultiFileAuthState, fetchLatestBaileysVersion } = require("@whiskeysockets/baileys");
 const P = require("pino");
-const qrcode = require("qrcode-terminal");
 const fs = require("fs");
 const path = require("path");
 
@@ -50,6 +49,19 @@ function getQuotedRaw(msg) {
 }
 
 async function startBot() {
+    const readline = require('readline');
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    const phoneNumber = await new Promise((resolve) => {
+        rl.question('📱 Masukin nomor bot (contoh: 62812xxxxxxx): ', (answer) => {
+            rl.close();
+            resolve(answer.trim());
+        });
+    });
+
     const { state, saveCreds } = await useMultiFileAuthState("./session");
     const { version } = await fetchLatestBaileysVersion();
 
@@ -57,20 +69,37 @@ async function startBot() {
         version,
         auth: state,
         logger: P({ level: "silent" }),
-        browser: ["Ditzmd", "Chrome", "1.0"]
+        browser: ["Ditzmd", "Chrome", "1.0"],
+        pairingOptions: {
+            usePairingCode: true,
+            phoneNumber: phoneNumber
+        }
     });
 
     sock.ev.on("creds.update", saveCreds);
 
     sock.ev.on("connection.update", (update) => {
-        const { connection, qr } = update;
-        if (qr) {
-            console.log("🔑 Scan QR ini di WhatsApp Web:");
-            qrcode.generate(qr, { small: true });
+        const { connection, qr, pairingCode } = update;
+        
+        if (pairingCode) {
+            console.log('══════════════════════════════════════');
+            console.log(`🚀 PAIRING CODE: ${pairingCode}`);
+            console.log('══════════════════════════════════════');
+            console.log('Cara pake:');
+            console.log('1. Buka WhatsApp di HP');
+            console.log('2. Tap 3 titik > Linked Devices > Link Device');
+            console.log('3. Masukin code di atas');
+            console.log('══════════════════════════════════════');
         }
+        
+        if (connection === "connecting") {
+            console.log("🔄 Connecting to WhatsApp...");
+        }
+        
         if (connection === "open") {
             console.log("✅ DixzzXD berhasil konek ke WhatsApp!");
         }
+        
         if (connection === "close") {
             console.log("❌ Koneksi terputus, mencoba reconnect...");
             startBot();
