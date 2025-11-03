@@ -1,3 +1,7 @@
+Welcome
+--------|
+![](https://files.catbox.moe/nn4kkz.jpg)
+
 # 🤖 DixzzXD
 > WhatsApp Bot simple & powerful buatan **DixzzXD88** 💥  
 > Dibangun dengan Node.js + plugin modular biar gampang dikembangin!
