@@ -18,6 +18,7 @@ Welcome
 ---
 
 ## 📦 Instalasi di Termux / Linux
+    *Install Termux di F-Droid*
 
 ### 1️⃣ Install dependensi dasar
 ```bash
