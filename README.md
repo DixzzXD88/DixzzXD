@@ -1,10 +1,13 @@
-Welcome
---------|
-![](https://files.catbox.moe/nn4kkz.jpg)
-
 # 🤖 DixzzXD
-> WhatsApp Bot simple & powerful buatan **DixzzXD88** 💥  
-> Dibangun dengan Node.js + plugin modular biar gampang dikembangin!
+
+> WhatsApp Bot simple & powerful buatan **[@DixzzXD88](https://github.com/DixzzXD88)** 💥  
+> Dibangun dengan **Node.js** + sistem plugin modular biar gampang dikembangin!
+
+---
+
+WELCOME
+-----|
+![DixzzXD Banner](https://files.catbox.moe/nn4kkz.jpg)
 
 ---
 
@@ -17,29 +20,20 @@ Welcome
 
 ---
 
-## 📦 Instalasi di Termux / Linux
-    *Install Termux di F-Droid*
+<details open><summary><code>## 📦 Instalasi di Termux / Linux</code></summary>
 
-### 1️⃣ Install dependensi dasar
 ```bash
-pkg update && pkg upgrade
-pkg install git nodejs -y
-npm install -g yarn
+$ pkg update && pkg upgrade
+$ pkg install git nodejs -y
+$ npm install -g yarn
+$ git clone https://github.com/DixzzXD88/DixzzXD
+$ cd DixzzXD
+$ yarn install
+$ npm start
+```
+</details>
 
-2️⃣ Clone repo ini
-
-git clone https://github.com/DixzzXD88/DixzzXD
-cd DixzzXD
-
-3️⃣ Install module yang dibutuhkan
-
-yarn install
-
-4️⃣ Jalankan bot
-
-npm start
-
-> Saat pertama kali jalan, bot akan menampilkan QR Code.
+> Saat pertama kali jalan, bot akan menampilkan QR Code (untuk login).
 Scan QR-nya pakai WhatsApp yang mau dijadikan bot.
 
 
@@ -48,26 +42,26 @@ Scan QR-nya pakai WhatsApp yang mau dijadikan bot.
 ---
 
 🧩 Struktur Folder
-
+```
 DixzzXD/
-├── plugins/         # Folder berisi plugin bot (command-command)
+├── plugin/          # Folder berisi plugin bot (command-command)
 ├── node_modules/    # Dependency otomatis dari Yarn
 ├── index.js         # File utama bot
 ├── package.json     # Info project dan script
 └── README.md        # Dokumentasi ini
-
+```
 
 ---
 
 🧠 Contoh Command
 
 Command	Fungsi
-
-.menu	Menampilkan daftar command
-.sticker	Mengubah gambar jadi stiker
-.ytmp4 <url>	Download video dari YouTube
-.ai <teks>	Tanya AI (jika diaktifkan)
-
+```
+.menu	       #Menampilkan daftar command
+.sticker	   #Mengubah gambar jadi stiker
+.ytmp4 <url>   #Download video dari YouTube
+.ai <teks>     #Tanya AI (jika diaktifkan)
+```
 
 
 ---
@@ -76,9 +70,8 @@ Command	Fungsi
 
 DixzzXD
 
-GitHub: @DixzzXD88
-
-Telegram: @yajujmanuk
+- GitHub :ㅤ <code><a href="https://github.com/DixzzXD88">DixzzXD</a></code>
+- Telegram : <code><a href="https://t.me/yajujmanuk">@yajujmanuk</a></code>
 
 
 
@@ -86,7 +79,7 @@ Telegram: @yajujmanuk
 
 💬 Catatan
 
-> Kalau ada bug, request fitur, atau ide keren, buka Issues ya bro 🙌
+> Kalau ada bug, request fitur, atau ide keren, buka Issues di repo ini ya 🙌
 
 
 
@@ -96,7 +89,6 @@ Telegram: @yajujmanuk
 🪪 Lisensi
 
 Lisensi: MIT License
-Boleh lu ubah, pakai ulang, atau modif — asal tetap kasih kredit kecil ke DixzzXD88 😎
 
 
 ---
