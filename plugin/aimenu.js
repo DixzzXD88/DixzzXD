@@ -36,7 +36,7 @@ module.exports = async (sock, msg, args, { isOwner }) => {
 ㄔ Nama Bot: DixzzXD
 ㄔ Language : JavaScript
 ㄔ Type : Plugin
-ㄔ Developer : Dixzz en iloel
+ㄔ Developer : Dixzz gantenk
 
 ╔──『 AI 』
 │ツ .gpt
@@ -53,7 +53,7 @@ module.exports = async (sock, msg, args, { isOwner }) => {
     await sock.sendMessage(
       msg.from,
       {
-        image: { url: "https://files.catbox.moe/rwm0qv.png" },
+        image: { url: "https://files.catbox.moe/1fsgrj.jpg" },
         caption: teks
       },
       { quoted: msg }
