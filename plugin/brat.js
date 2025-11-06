@@ -1,33 +1,48 @@
-require('../settings/config');
-const axios = require('axios');
+const axios = require("axios");
 
-let handler = async (m, { client, text, reply, reaction, pushname, prefix, command }) => {
-    if (!text) return reply(`\n*ex:* ${prefix + command} Hello world!\n`);
+module.exports = async (sock, msg, args, { isOwner }) => {
+  if (!args.length) {
+    return await sock.sendMessage(msg.from, {
+      text: "⚠️ Harap berikan teks setelah perintah.",
+    });
+  }
 
-    await reaction(m.chat, '⚡');
+  const text = args.join(" ");
 
-    try {
-        // API brat
-        const bratUrl = `https://api.siputzx.my.id/api/m/brat?text=${encodeURIComponent(text)}&isAnimated=false&delay=500`;  
+  try {
+    // ⏳ reaction saat proses
+    await sock.sendMessage(msg.from, {
+      react: {
+        text: "⏳",
+        key: msg.key
+      }
+    });
 
-        const res = await axios.get(bratUrl, {
-            responseType: 'arraybuffer'
-        });
+    // API Brat
+    const url = `https://api.siputzx.my.id/api/m/brat?text=${encodeURIComponent(
+      text
+    )}&isAnimated=false&delay=500`;
 
-        let encmedia = await client.sendImageAsSticker(m.chat, res.data, m, {
-            packname: "BRATGENERATOR",
-            author: "DixzzXD-NEW ERA"
-        });
+    const response = await axios.get(url, { responseType: "arraybuffer" });
+    const imageBuffer = Buffer.from(response.data, "binary");
 
-    } catch (err) {
-        console.error(err);
-        reply('Failed');
-    }
-}
+    // Kirim sebagai stiker
+    await sock.sendMessage(msg.from, {
+      sticker: imageBuffer
+    });
 
-handler.help = ['brat']
-handler.tags = ['sticker']
-handler.command = ['brat']
-handler.isGb = true
+    // ✅ reaction selesai
+    await sock.sendMessage(msg.from, {
+      react: {
+        text: "✅",
+        key: msg.key
+      }
+    });
 
-module.exports = handler;
+  } catch (error) {
+    console.error("Gagal membuat stiker Brat:", error);
+    await sock.sendMessage(msg.from, {
+      text: "❌ Terjadi kesalahan saat membuat stiker.",
+    });
+  }
+};
