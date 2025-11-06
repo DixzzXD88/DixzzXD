@@ -5,7 +5,7 @@ module.exports = async function (sock, msg, args) {
     if (!args || !args.length) {
       return sock.sendMessage(
         msg.key.remoteJid,
-        { text: "❌ Contoh: .tiktok https://vt.tiktok.com/ZSyamXD1r/" },
+        { text: "❌ Contoh: .tiktok https://vt.tiktok.com/ZSyaGFR7J/" },
         { quoted: msg }
       );
     }
@@ -17,47 +17,53 @@ module.exports = async function (sock, msg, args) {
       react: { text: "🔍", key: msg.key },
     });
 
-    // API tikwm.com
-    const api = `https://tikwm.com/api/?url=${encodeURIComponent(tiktokUrl)}`;
+    // Coba multiple API fallback
+    const apis = [
+      `https://www.tikwm.com/api/?url=${encodeURIComponent(tiktokUrl)}`,
+      `https://api.douyin.wtf/api?url=${encodeURIComponent(tiktokUrl)}`,
+      `https://tikdown.org/get?url=${encodeURIComponent(tiktokUrl)}`
+    ];
 
-    const { data } = await axios.get(api);
+    let videoData = null;
+    
+    for (const api of apis) {
+      try {
+        console.log(`Trying API: ${api}`);
+        const { data } = await axios.get(api, { timeout: 10000 });
+        
+        if (data.code === 0 || data.data) {
+          videoData = data.data || data;
+          console.log("Success with API:", api);
+          break;
+        }
+      } catch (err) {
+        console.log(`API failed: ${api}`, err.message);
+        continue;
+      }
+    }
 
-    if (data.code !== 0) {
+    if (!videoData) {
       return sock.sendMessage(
         jid,
-        { text: "❌ Gagal mengambil data dari API TikTok." },
+        { text: "❌ Semua API sedang down. Coba lagi nanti." },
         { quoted: msg }
       );
     }
 
-    const { data: videoData } = data;
-    const { title, music_info } = videoData;
-    
-    // Kirim video tanpa watermark
-    if (videoData.play) {
+    // Kirim video
+    if (videoData.play || videoData.noWatermark) {
+      const videoUrl = videoData.play || videoData.noWatermark;
       await sock.sendMessage(
         jid,
         {
-          video: { url: videoData.play },
-          caption: `🎥 ${title || "Video TikTok"}\n✅ Tanpa watermark\n\n🎵 Musik: ${music_info?.title || "Unknown"}`
+          video: { url: videoUrl },
+          caption: `🎥 TikTok Downloader\n✅ Download berhasil!`
         },
         { quoted: msg }
       );
     }
 
-    // Kirim video dengan watermark (jika ada)
-    if (videoData.wmplay) {
-      await sock.sendMessage(
-        jid,
-        {
-          video: { url: videoData.wmplay },
-          caption: `🎥 ${title || "Video TikTok"}\n🏷️ Dengan watermark\n\n🎵 Musik: ${music_info?.title || "Unknown"}`
-        },
-        { quoted: msg }
-      );
-    }
-
-    // Kirim audio (jika ada)
+    // Kirim audio
     if (videoData.music) {
       await sock.sendMessage(
         jid,
@@ -75,10 +81,10 @@ module.exports = async function (sock, msg, args) {
     });
 
   } catch (err) {
-    console.error("TikTok Plugin Error:", err.response?.data || err.message);
+    console.error("TikTok Plugin Error:", err.message);
     await sock.sendMessage(
       msg.key.remoteJid,
-      { text: "❌ Terjadi kesalahan saat mengunduh video TikTok." },
+      { text: "❌ Error: " + err.message },
       { quoted: msg }
     );
   }
