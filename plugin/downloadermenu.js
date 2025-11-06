@@ -40,13 +40,12 @@ module.exports = async (sock, msg, args, { isOwner }) => {
 
 â•”â”€â”€ã€Ž Random ã€
 â”‚ãƒ„ .tiktok
-â”‚ãƒ„ .tiktokslide
-â”‚ãƒ„ .tiktokaudio
-â”‚ãƒ„ .ytmp3
-â”‚ãƒ„ .ytmp4
-â”‚ãƒ„ .instagram
-â”‚ãƒ„ .spotify
-â”‚ãƒ„ .videy
+â”‚ãƒ„ .tiktokslide (tahap pengembangan )
+â”‚ãƒ„ .ytmp3 (tahap pengembangan)
+â”‚ãƒ„ .ytmp4 (tahap pengembangan)
+â”‚ãƒ„ .instagram (tahap pengembangan)
+â”‚ãƒ„ .spotify (tahap pengembangan)
+â”‚ãƒ„ .videy (tahap pengembangan)
 â•šâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â˜‰
 `
 
@@ -70,4 +69,5 @@ module.exports = async (sock, msg, args, { isOwner }) => {
       { quoted: msg }
     )
   }
+
 }
