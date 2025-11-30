@@ -7,7 +7,7 @@
     "start": "node index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Dixzz",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
